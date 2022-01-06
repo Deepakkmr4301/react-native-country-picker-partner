@@ -26,10 +26,10 @@ import {
   TextInput,
   ScrollView,
   Platform,
-  } from 'react-native';
+} from 'react-native';
 import ListView from 'deprecated-react-native-listview';
 
-import {  Icon } from 'native-base';
+import { Icon } from 'native-base';
 
 import Fuse from 'fuse.js';
 
@@ -89,44 +89,46 @@ export default class CountryPicker extends Component {
   static renderEmojiFlag(cca2, emojiStyle) {
     return (
       <Text style={[styles.emojiFlag, emojiStyle]}>
-        { cca2 !== '' && countries[cca2.toUpperCase()] ? <Emoji name={countries[cca2.toUpperCase()].flag} /> : null }
+        {cca2 !== '' && countries[cca2.toUpperCase()] ? <Emoji name={countries[cca2.toUpperCase()].flag} /> : null}
       </Text>
     );
   }
 
-  static renderImageFlag(cca2,imageStyle, disabled) {
+  static renderImageFlag(cca2, imageStyle, disabled, hideFlag) {
     return cca2 !== '' ?
-    <View style={{flexDirection:"row",marginLeft:0, marginTop: Platform.OS === 'ios' ? 7 : 0}}>
-
-     <Image
-      style={[styles.imgStyle, imageStyle,{marginLeft:5}]}
-      source={{ uri: countries[cca2].flag }}
-    />
-    <View style={{flexDirection:"row"}}>
-       <Text style={{marginLeft:8}}>{'+'+countries[cca2].callingCode} </Text>
-       {
-         disabled ? null : 
-         <Icon name='caretdown' type='AntDesign' style={{fontSize: 11,marginTop:2}} />
-       }
-     </View>
-    </View> : null;
+      <View style={{ flexDirection: "row", marginLeft: 0, marginTop: Platform.OS === 'ios' ? 0 : 0 }}>
+        {
+          hideFlag ? null :
+            <Image
+              style={[styles.imgStyle, imageStyle, { marginLeft: 5 }]}
+              source={{ uri: countries[cca2].flag }}
+            />
+        }
+        <View style={{ flexDirection: "row" }}>
+          <Text style={{ marginLeft: hideFlag ? 0 : 8 }}>{'+' + countries[cca2].callingCode} </Text>
+          {
+            disabled ? null :
+              <Icon name='caretdown' type='AntDesign' style={{ fontSize: 11, marginTop: 2 }} />
+          }
+        </View>
+      </View> : null;
   }
 
   static renderImageFlag1(cca2, imageStyle) {
     return cca2 !== '' ?
       <Image
-      style={[styles.imgStyle, imageStyle]}
-      source={{ uri: countries[cca2].flag }}
-    />
-    : null;
+        style={[styles.imgStyle, imageStyle]}
+        source={{ uri: countries[cca2].flag }}
+      />
+      : null;
   }
 
-  static renderFlag(cca2,itemStyle, emojiStyle, imageStyle, disabled) {
+  static renderFlag(cca2, itemStyle, emojiStyle, imageStyle, disabled, hideFlag) {
     return (
       <View style={[styles.itemCountryFlag, itemStyle]}>
         {isEmojiable ?
-            CountryPicker.renderEmojiFlag(cca2, emojiStyle)
-            : CountryPicker.renderImageFlag(cca2,imageStyle, disabled)}
+          CountryPicker.renderEmojiFlag(cca2, emojiStyle)
+          : CountryPicker.renderImageFlag(cca2, imageStyle, disabled, hideFlag)}
       </View>
     );
   }
@@ -134,8 +136,8 @@ export default class CountryPicker extends Component {
     return (
       <View style={[styles.itemCountryFlag, itemStyle]}>
         {isEmojiable ?
-            CountryPicker.renderEmojiFlag(cca2, emojiStyle)
-            : CountryPicker.renderImageFlag1(cca2, imageStyle)}
+          CountryPicker.renderEmojiFlag(cca2, emojiStyle)
+          : CountryPicker.renderImageFlag1(cca2, imageStyle)}
       </View>
     );
   }
@@ -147,10 +149,10 @@ export default class CountryPicker extends Component {
     let countryList = [...props.countryList],
       excludeCountries = [...props.excludeCountries];
 
-    excludeCountries.map((excludeCountry)=>{
+    excludeCountries.map((excludeCountry) => {
       let index = countryList.indexOf(excludeCountry);
 
-      if(index !== -1){
+      if (index !== -1) {
         countryList.splice(index, 1);
       }
     });
@@ -189,15 +191,15 @@ export default class CountryPicker extends Component {
         (acc, item) => [...acc, { id: item, name: this.getCountryName(countries[item]) }],
         [],
       ), {
-        shouldSort: true,
-        threshold: 0.6,
-        location: 0,
-        distance: 100,
-        maxPatternLength: 32,
-        minMatchCharLength: 1,
-        keys: ['name'],
-        id: 'id',
-      }
+      shouldSort: true,
+      threshold: 0.6,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 1,
+      keys: ['name'],
+      id: 'id',
+    }
     );
   }
 
@@ -344,9 +346,9 @@ export default class CountryPicker extends Component {
           {
             this.props.children ?
               this.props.children
-            :
+              :
               (<View style={styles.touchFlag}>
-                {CountryPicker.renderFlag(this.props.cca2, {}, {}, {}, this.props.disabled)}
+                {CountryPicker.renderFlag(this.props.cca2, {}, {}, {}, this.props.disabled, this.props.hideFlag)}
               </View>)
           }
         </TouchableOpacity>
@@ -358,21 +360,21 @@ export default class CountryPicker extends Component {
             <View style={styles.header}>
               {
                 this.props.closeable &&
-                  <CloseButton
-                    onPress={() => this.onClose()}
-                  />
+                <CloseButton
+                  onPress={() => this.onClose()}
+                />
               }
               {
                 this.props.filterable &&
-                  <TextInput
-                    autoFocus={this.props.autoFocusFilter}
-                    autoCorrect={false}
-                    placeholder={this.props.filterPlaceholder}
-                    placeholderTextColor={this.props.filterPlaceholderTextColor}
-                    style={[styles.input, !this.props.closeable && styles.inputOnly]}
-                    onChangeText={this.handleFilterChange}
-                    value={this.state.filter}
-                  />
+                <TextInput
+                  autoFocus={this.props.autoFocusFilter}
+                  autoCorrect={false}
+                  placeholder={this.props.filterPlaceholder}
+                  placeholderTextColor={this.props.filterPlaceholderTextColor}
+                  style={[styles.input, !this.props.closeable && styles.inputOnly]}
+                  onChangeText={this.handleFilterChange}
+                  value={this.state.filter}
+                />
               }
             </View>
             <KeyboardAvoidingView behavior="padding">
